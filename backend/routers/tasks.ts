@@ -1,10 +1,8 @@
 import express from "express";
 import mongoose from "mongoose";
 import {TaskMutation} from "../types";
-import Track from "../models/Task";
-import auth, {RequestWithUser} from "../middleware/auth";
-import TrackHistory from "../models/TrackHistory";
 import Task from "../models/Task";
+import auth, {RequestWithUser} from "../middleware/auth";
 
 const tasksRouter = express.Router();
 
@@ -41,6 +39,23 @@ tasksRouter.post('/', auth, async (req, res, next) => {
     } else {
       return next(e);
     }
+  }
+});
+
+
+tasksRouter.delete('/:id', auth, async (req, res, next) => {
+  const user = (req as RequestWithUser).user;
+
+  try {
+    const task = await Task.findOne({user: user._id, _id: req.params.id});
+    if (task) {
+      await Task.deleteOne({user: task.user, _id: task._id});
+      return res.send("Задача удалена");
+    } else {
+      return res.status(403).send("Нельзя удалить чужую задачу");
+    }
+  } catch (e) {
+    return next(e);
   }
 });
 
