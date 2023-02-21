@@ -42,6 +42,23 @@ tasksRouter.post('/', auth, async (req, res, next) => {
   }
 });
 
+tasksRouter.put('/:id', auth, async (req, res, next) => {
+  const user = (req as RequestWithUser).user;
+
+  try {
+    const task = await Task.findOne({user: user._id, _id: req.params.id});
+    if (task) {
+      await Task.updateOne({user: task.user, _id: task._id}, {status: req.body.status});
+      const updatedTask = await Task.findOne({user: task.user, _id: task._id});
+      return res.send(updatedTask);
+    } else {
+      return res.status(403).send("Нельзя редактировать чужую задачу");
+    }
+  } catch (e) {
+    return next(e);
+  }
+});
+
 
 tasksRouter.delete('/:id', auth, async (req, res, next) => {
   const user = (req as RequestWithUser).user;
