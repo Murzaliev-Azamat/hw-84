@@ -2,9 +2,7 @@ import crypto from 'crypto';
 import mongoose from 'mongoose';
 import config from './config';
 import User from './models/User';
-import Artist from "./models/Artist";
-import Album from "./models/Album";
-import Track from "./models/Task";
+import Task from "./models/Task";
 
 const run = async () => {
   mongoose.set('strictQuery', false);
@@ -12,53 +10,63 @@ const run = async () => {
   const db = mongoose.connection;
 
   try {
-    await db.dropCollection('albums');
-    await db.dropCollection('artists');
-    await db.dropCollection('trackhistories');
-    await db.dropCollection('tracks');
+    await db.dropCollection('tasks');
     await db.dropCollection('users');
   } catch (e) {
     console.log('Collections were not present, skipping drop...');
   }
 
-  const [eminem, madonna] = await Artist.create({
-    name: "Eminem",
-    image: "fixtures/eminem.jpg",
-    info: "Rap singer"
-  }, {
-    name: "Madonna",
-    image: "fixtures/madonna.jpg",
-    info: "Pop singer"
-  });
+  const [azamat, adilet] = await User.create({
+      username: "Azamat",
+      email: "azamat92@bk.ru",
+      password: "12345",
+      token: crypto.randomUUID()
+    }, {
+      username: "Adilet",
+      email: "adilet94@mail.ru",
+      password: "300",
+      token: crypto.randomUUID()
+    }
+  );
 
-  const [theEminemShow, americanLife] = await Album.create({
-    name: "The Eminem Show",
-    year: "2002",
-    artist: eminem._id,
-    image: "fixtures/the_eminem_show.jpg"
-  }, {
-    name: "American Life",
-    year: "2003",
-    artist: madonna._id,
-    image: "fixtures/american_life.jpg"
-  });
-
-  await Track.create({
-    name: "White America",
-    time: "3:15",
-    album: theEminemShow._id,
-  }, {
-    name: "Frozen",
-    time: "3:15",
-    album: americanLife._id,
-  });
-
-  await User.create({
-    username: "Azamat",
-    email: "azamat92@bk.ru",
-    password: "12345",
-    token: crypto.randomUUID()
-  });
+  await Task.create(
+    {
+      user: azamat._id,
+      title: "Do homework",
+      description: "About homework",
+      status: "new"
+    },
+    {
+      user: azamat._id,
+      title: "Go to swim",
+      description: "About swim",
+      status: "in_progress"
+    },
+    {
+      user: azamat._id,
+      title: "Repair the car",
+      description: "About repair",
+      status: "complete"
+    },
+    {
+      user: adilet._id,
+      title: "Build a house",
+      description: "About house",
+      status: "new"
+    },
+    {
+      user: adilet._id,
+      title: "Go on trip",
+      description: "About trip",
+      status: "in_progress"
+    },
+    {
+      user: adilet._id,
+      title: "Wash the dishes",
+      description: "About dishes",
+      status: "complete"
+    },
+  );
 
   await db.close();
 };
