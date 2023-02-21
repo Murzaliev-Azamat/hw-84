@@ -6,15 +6,14 @@ import {AlbumMutation} from "../types";
 
 const albumsRouter = express.Router();
 
-albumsRouter.get('', async (req, res, next) => {
+albumsRouter.get('/', async (req, res, next) => {
   let artist_id = req.query.artist
-
-  if (artist_id) {
-    const albums = await Album.find({artist: artist_id});
-    return res.send(albums);
-  }
-
   try {
+    if (artist_id) {
+      const albums = await Album.find({artist: artist_id});
+      return res.send(albums);
+    }
+
     const albums = await Album.find();
     return res.send(albums);
   } catch (e) {
@@ -31,7 +30,7 @@ albumsRouter.get('/:id', async (req, res, next) => {
   }
 });
 
-albumsRouter.post('', imagesUpload.single('image'), async (req, res, next) => {
+albumsRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
   const albumData: AlbumMutation = {
     artist: req.body.artist,
     name: req.body.name,

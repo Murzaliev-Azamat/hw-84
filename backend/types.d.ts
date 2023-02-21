@@ -14,10 +14,11 @@ export interface AlbumMutation {
   year: string;
 }
 
-export interface TrackMutation {
-  album: string;
-  name: string;
-  time: string;
+export interface TaskMutation {
+  user: ObjectId;
+  title: string;
+  description: string;
+  status: string;
 }
 
 export interface TrackHistoryMutation {

@@ -4,7 +4,7 @@ import config from './config';
 import User from './models/User';
 import Artist from "./models/Artist";
 import Album from "./models/Album";
-import Track from "./models/Track";
+import Track from "./models/Task";
 
 const run = async () => {
   mongoose.set('strictQuery', false);

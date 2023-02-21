@@ -6,7 +6,7 @@ import {ArtistWithoutId} from "../types";
 
 const artistsRouter = express.Router();
 
-artistsRouter.get('/artists', async (req, res, next) => {
+artistsRouter.get('/', async (req, res, next) => {
   try {
     const artists = await Artist.find();
     return res.send(artists);
@@ -15,7 +15,7 @@ artistsRouter.get('/artists', async (req, res, next) => {
   }
 });
 
-artistsRouter.post('/artists', imagesUpload.single('image'), async (req, res, next) => {
+artistsRouter.post('/', imagesUpload.single('image'), async (req, res, next) => {
   const artistData: ArtistWithoutId = {
     name: req.body.name,
     image: req.file ? req.file.filename : null,

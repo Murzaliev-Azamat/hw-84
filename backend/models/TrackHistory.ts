@@ -1,6 +1,6 @@
 import mongoose, {Types} from 'mongoose';
 import User from "./User";
-import Track from "./Track";
+import Track from "./Task";
 const Schema = mongoose.Schema;
 
 const TrackHistorySchema = new Schema({
