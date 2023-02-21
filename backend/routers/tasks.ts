@@ -8,20 +8,16 @@ import Task from "../models/Task";
 
 const tasksRouter = express.Router();
 
-// tasksRouter.get('/', async (req, res, next) => {
-//   let album_id = req.query.album
-//   try {
-//     if (album_id) {
-//       const tracks = await Track.find({album: album_id});
-//       return res.send(tracks);
-//     }
-//
-//     const tracks = await Track.find();
-//     return res.send(tracks);
-//   } catch (e) {
-//     return next(e);
-//   }
-// });
+tasksRouter.get('/', auth, async (req, res, next) => {
+  const user = (req as RequestWithUser).user;
+
+  try {
+    const tasks = await Task.find({user: user._id});
+    return res.send(tasks);
+  } catch (e) {
+    return next(e);
+  }
+});
 
 
 tasksRouter.post('/', auth, async (req, res, next) => {
